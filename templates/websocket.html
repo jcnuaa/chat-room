@@ -40,6 +40,7 @@
 
         var connected = false;
         var $result=new Array()
+        var $imageAdds=new Array(" ","/static/images/1.png","/static/images/2.png","/static/images/3.png","/static/images/4.png","/static/images/5.png","/static/images/6.png")
 
 
         // Create a socket
@@ -78,11 +79,27 @@
             var msg = data.Text;
             var usr = data.User;
 
+
             var $usernameDiv = $('<span class="username"/>')
                     .text(usr)
                     .css('color', getUsernameColor(usr));
-            var $messageBodyDiv = $('<span class="messageBody">')
+            if (msg.substr(0,3)=='Arr'){
+                msg=msg.substring(3)
+                //msg =msg.map(Number)
+                var str=msg.split('')
+               // var x="/static/images/jing3.jpg"
+                //var str1="<img src="+x+'>"
+                var x='/static/images/jing3.png'
+                var str1='<img src='+x+'>'
+                for (var i=0;i<6;i++)
+                {
+                    str1+='<img src='+$imageAdds[str[i]]+'>'
+                }
+                var $messageBodyDiv = $(str1)
+            }else{
+                var $messageBodyDiv = $('<span class="messageBody">')
                     .text(msg);
+            }
 
             var typingClass = data.typing ? 'typing' : '';
             var $messageDiv = $('<li class="message"/>')
@@ -143,12 +160,17 @@
 
         document.getElementById('begin').addEventListener('click', function() {
             var myArray=new Array()
+            var str=""
             for (var i=0;i<6;i++)
             {
                 myArray[i]=RandomNum(1,7)
+                str+='<img src='+$imageAdds[myArray[i]]+'>'
             }
-            document.getElementById("demo").innerHTML=myArray;
-            //$inputMessage.val('');
+           // document.getElementById("demo").innerHTML=myArray
+
+            document.getElementById("demo").innerHTML=str
+
+            //$inputMessage.val('');$imageAdds[myArray[0]]
             req = JSON.stringify({
                 msg:"我摇好啦"
             });
@@ -159,12 +181,11 @@
         document.getElementById('end').addEventListener('click', function() {
             var myArray1=new Array()
             var len=$result.length
-            for (var i=0;i<1;i++)
-            {
-               myArray1[i]=$result[len-1]
-            }
-            document.getElementById("demo").innerHTML=myArray1
-            var str=myArray1.join(",")
+
+               myArray1[0]=$result[len-1]
+
+            //document.getElementById("demo").innerHTML=myArray1
+            var str='Arr'+myArray1[0].join("")
             req1 = JSON.stringify({
                 msg:str
             });
